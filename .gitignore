@@ -1,1 +1,82 @@
-.DS_Store
+# =========================
+# LaTeX build artifacts
+# =========================
+# Core aux/log files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.synctex(busy)
+*.synctex.gz(busy)
+*.fls
+*.fdb_latexmk
+*.pdf
+
+# TeX cache
+.texcache/
+
+# BibTeX/Biber
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*-blx.bib
+
+# Index, glossaries, nomenclature
+*.idx
+*.ilg
+*.ind
+*.ist
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.nlo
+*.nls
+*.nlg
+
+# Beamer and listings
+*.nav
+*.snm
+*.vrb
+*.xdv
+
+# minted/Pygments
+_minted-*/
+*.pyg
+
+# TikZ externalization
+tikzexternal*/
+
+# sagetex/pythontex
+*.sagetex.sage
+*.sagetex.py
+*.sagetex.scmd
+*.sagetex.sout
+*.pytxcode
+pythontex-files-*/
+
+# arara and other helpers
+arara.log
+
+# latexmk and temporary dirs
+*.dvi
+*.ps
+*.auxlock
+
+# =========================
+# Editors/OS artifacts
+# =========================
+Thumbs.db
+._* 
+.Spotlight-V100
+.Trashes
+.idea/
+.vscode/
+
