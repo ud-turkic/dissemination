@@ -1,0 +1,18 @@
+% BibTool configuration for UDW 2026 bibliography
+% Usage: bibtool -r .bibtoolrsc references.bib -o references.bib.tmp && mv references.bib.tmp references.bib
+
+% Preserve the case of citation keys
+preserve.key.case = on
+
+% Sort entries alphabetically by key
+sort = on
+
+% Custom entry types (LREC style)
+new.entry.type = {languageresource}
+
+% Format settings
+print.line.length = 79
+print.use.tab = off
+print.indent = 2
+print.align.key = 0
+print.align = 18
