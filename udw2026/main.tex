@@ -1,0 +1,456 @@
+% LREC 2026 Example;
+% LREC Is now using templates similar to the ACL ones.
+\documentclass[10pt, a4paper]{article}
+
+\usepackage[final]{lrec2026} % this is the new style
+% the 'review' option anonymizes the paper following submission guideline
+% the 'final' option produces the camera ready version (non anonymized)
+% default version is 'final', so use review option for submission
+
+% Schwa (ə) and Cyrillic support — T2A loaded first so T1 stays default
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar}
+\newunicodechar{ə}{{\fontencoding{T2A}\selectfont\cyrschwa}}
+\newcommand{\cyr}[1]{{\fontencoding{T2A}\selectfont #1}}
+
+\newcommand{\gl}[1]{\textsc{#1}}
+\newcommand{\upos}[1]{\texttt{#1}}
+\newcommand{\rel}[1]{\texttt{#1}}
+
+\usepackage{gb4e}
+\noautomath
+
+\usepackage{tikz-dependency}
+
+\title{Negation of Turkic non-verbal clauses: analysis and Universal Dependencies implementation}
+% Negation of Oghuz and Kipchak non-verbal clauses
+% Negation of non-verbal clauses in selected Turkic languages
+
+\name{Nikolett Mus\textsuperscript{1}, Furkan Akkurt\textsuperscript{2}, Bermet Chontaeva\textsuperscript{3}, Soudabeh Eslami\textsuperscript{3},\\
+{\bf \large Sardana Ivanova\textsuperscript{4}, Çağrı Çöltekin\textsuperscript{3}, Jonathan Washington\textsuperscript{5},}\\
+{\bf \large Gulnura Dzhumalieva\textsuperscript{6}, Aida Kasieva\textsuperscript{6}}}
+
+
+
+\address{\textsuperscript{1}ELTE Research Centre for Linguistics,
+  \textsuperscript{2}Bo\u{g}aziçi University,
+  \textsuperscript{3}University of Tübingen,\\
+  \textsuperscript{4}Independent Researcher,
+  \textsuperscript{5}Swarthmore College,
+  \textsuperscript{6}Kyrgyz-Turkish Manas University\\
+  {\tt\fontsize{8}{10}\selectfont mus.nikolett@nytud.elte.hu,
+  furkan.akkurt@bogazici.edu.tr,}\\
+  {\tt\fontsize{8}{10}\selectfont bermet.chontaeva@student.uni-tuebingen.de,
+  soudabeh.eslami@student.uni-tuebingen.de,}\\
+  {\tt\fontsize{8}{10}\selectfont sardana.n.ivanova@gmail.com,
+  cagri.coeltekin@uni-tuebingen.de,}\\
+  {\tt\fontsize{8}{10}\selectfont jonathan.washington@swarthmore.edu,
+  gulnur.jumalieva@manas.edu.kg,
+  aida.kasieva@manas.edu.kg}}
+
+\abstract{
+The paper examines the grammatical behavior of the negative element used to negate predicates in non-verbal clauses in three Turkic languages: Azerbaijani, Kyrgyz, and Turkish. We focus on its interaction with verbal copulas, subject agreement, and the distribution of agreement suffixes, as well as its position within the predicate phrase. The study draws on both previously described corpus data and newly collected examples.
+Across all three languages, agreement features are realised on the negative element only in the absence of an overt copula. The agreement morphology involved is identical to that found with nominal, adjectival, and adverbial predicates. In all the languages examined, the negative element remains within the predicate phrase; thus, its position is syntactically constrained. At the same time, we observe differences among the languages in the degree to which the position of the negator is fixed within the predicate. In Turkish and Azerbaijani, regardless of which element of the nominal predicate it negates, the negator invariably follows the predicate. In Kyrgyz, by contrast, it consistently appears immediately after the element it negates within the predicate.
+These patterns suggest that the negative element behaves syntactically as a phrasal operator associated with non-verbal predicates. For annotation purposes, we therefore propose analysing the negative element as a negation modifier, assigning it the POS tag \upos{ADV} and the dependency relation \texttt{advmod:neg}.\\
+  \Keywords{
+    non-verbal negation,
+    non-verbal negation element,
+    Turkic languages,
+    Universal Dependencies (UD)
+  }
+}
+
+\begin{document}
+
+\maketitleabstract
+
+\section{Introduction}
+
+This paper investigates a negative element used in the negation of non-verbal clauses in several Turkic languages, examining its morphosyntactic behavior, distribution, and interpretive properties.
+
+The empirical focus is on Kyrgyz, Southern Azerbaijani, and Turkish, which represent two distinct branches of the Turkic family -- Oghuz (Azerbaijani and Turkish) and Kipchak (Kyrgyz) -- thereby enabling cross-branch comparison.
+Although the analysis is developed on the basis of these languages, it may extend to other Turkic languages in which this type of negation is attested.
+
+At the same time, some Turkic languages -- such as Sakha (Lena Turkic) -- employ a different strategy for non-verbal negation, namely a copular verb marked with a negation morpheme, and lack an element comparable to the one examined here.
+
+Our primary goal is to provide a detailed descriptive account of this construction, laying the groundwork for a unified analysis that can inform and improve Universal Dependencies (UD) treebanks~\citep{demarneffe2021,akhundjanova-etal-2025-parallel}.
+
+While existing UD analyses often treat this element as an auxiliary or a copular verb, our observations indicate that such a characterization is not adequate.\footnote{All treebanks examined are part of UD v2.17.} We show that an overt verbal copula can co-occur with the negative element, which argues against analyzing it as a copula or auxiliary head.
+In contexts where no overt copula is present, agreement morphology surfaces on the negative element itself.
+The agreement suffixes are formally identical to those used with nominal, adjectival, and adverbial predicates, suggesting that in copula-less environments the negative element occupies a predicate-related position within the clause.
+
+Patterns of combinability with copulas, agreement behavior, and positional restrictions indicate that the negative element functions as a phrasal operator, taking scope over the constituent it negates.
+Accordingly, within the UD framework, we propose that it should be assigned the part-of-speech tag \upos{ADV} and the dependency relation \rel{advmod:neg}, providing a linguistically motivated basis for more accurate annotation in Turkic treebanks.
+
+\section{Background}
+
+In Turkic languages, multiple types of negative elements and structures exist, often occurring in complementary distribution.
+Some negative elements appear exclusively with verbs, such as the Turkish verbal negation suffix -\textit{ma}; e.g. \textit{oku-\textbf{ma}-dı} `(s/he) did not read'~\citep{kornfilt2013}, while others are restricted to clauses with non-verbal predicates, such as \textit{değil} in Turkish~\citep{lee1996grammar, robbeets2020, kornfilt2013}.
+However, recent studies suggest that the distinction is not entirely clear-cut, with some overlap between these structures and/or elements~\citep{seydi2020}.
+In the present study, we set aside these overlaps to focus specifically on the negative element used in the negation of non-verbal clauses. This construction is illustrated by means of minimal pairs (affirmative vs.\ negative) in Azerbaijani (\ref{nv-az})--(\ref{neg-az}),\footnote{Although the Azerbaijani examples are drawn from the Southern (Iranian) variety, they are transcribed using the Latin alphabet according to the orthographic conventions of North Azerbaijani.} Kyrgyz (\ref{nv-ky})--(\ref{neg-ky}), and Turkish (\ref{nv-tr})--(\ref{neg-tr}).\footnote{In addition to its use in non-verbal predication, the negative element discussed here is also attested in constituent negation in these languages~\citep{kornfilt2013}; this use falls outside the scope of the present study.}
+
+\begin{exe}
+  \ex
+  \begin{xlist}
+    \ex\label{nv-az}
+    \gll Deniz döktürdür.\\ % I have changed to 'doktor' and 'deyil' as I've seen them used this way on Wikipedia and elsewhere.
+    Deniz doctor-\gl{COP}-3\gl{sg}\\
+    \glt `Deniz is a doctor.'
+    \ex\label{neg-az}
+    \gll Deniz döktür \textbf{dəyil}.\\ % I have changed to 'doktor' and 'deyil' as I've seen them used this way on Wikipedia and elsewhere.
+    Deniz doctor \gl{neg}[3\gl{sg}]\\
+    \glt `Deniz is not a doctor.'
+  \end{xlist}
+\end{exe}
+
+\begin{exe}
+  \ex
+  \begin{xlist}
+    \ex\label{nv-ky}
+    \glll \cyr{Дениз} \cyr{доктур}.\\
+    Deniz doktur.\\
+    Deniz doctor[3\gl{sg}]\\
+    \glt `Deniz is a doctor.'
+    \ex\label{neg-ky}
+    \glll \cyr{Дениз} \cyr{доктур} \cyr{\textbf{эмес}}.\\
+    Deniz doktur \textbf{emes}.\\
+    Deniz doctor \gl{neg}[3\gl{sg}]\\
+    \glt `Deniz is not a doctor.'
+ 
+  \end{xlist}
+\end{exe}
+
+\begin{exe}
+  \ex
+  \begin{xlist}
+    \ex\label{nv-tr}   
+    \gll Deniz doktor.\\
+    Deniz doctor[3\gl{sg}]\\
+    \glt `Deniz is a doctor.'
+
+    \ex\label{neg-tr}   
+    \gll Deniz doktor \textbf{değil}.\\
+    Deniz doctor \gl{neg}[3\gl{sg}]\\
+    \glt `Deniz is not a doctor.'
+  \end{xlist}
+\end{exe}
+
+As already mentioned, this element is not attested in all Turkic languages; for example, in Sakha (Lena Turkic) the same meaning appears to be expressed by attaching a negative morpheme to the verbal copula~\citep{ubriatova, sleptsov}, as illustrated in (\ref{neg-sa}).\footnote{While this form might ultimately reflect the same historical source as the negative element in nonverbal predicate constructions in other Turkic languages, further investigation is needed to determine how its development compares and whether it shows language-specific innovations.}
+
+\begin{exe}
+  \ex\label{neg-sa}
+  \glll \cyr{Дениз} \cyr{доктор} \cyr{\textbf{буол-батах}}.\\
+  Deniz doktor \textbf{buol-batax}.\\
+  Deniz doctor be-\gl{neg};\gl{pres}[3\gl{sg}]\\
+  \glt `Deniz is not a doctor.'
+\end{exe}
+
+What is particularly striking about the negative element attested in Azerbaijani, Kyrgyz, and Turkish is that it appears, at least superficially, to behave like a verb, or more specifically, like a verbal copula, since it can bear subject agreement suffixes, see (\ref{agr}).
+In Turkic languages, subject agreement is canonically realized on the finite predicate in clauses.
+
+\begin{exe}
+  \ex\label{agr}
+  \begin{xlist}
+    \ex\label{agr-az}
+    \gll Mən döktür \textbf{dəyil-əm}.\\
+    1\gl{sg} doctor \gl{neg}-1\gl{sg}\\
+    \glt `I am not a doctor.'
+    \ex\label{agr-ky}
+    \glll \cyr{Мен} \cyr{доктур} \cyr{\textbf{эмесмин}}.\\
+    Men doktur \textbf{emes-min}.\\
+    1\gl{sg} doctor \gl{neg}-1\gl{sg}\\
+    \glt `I am not a doctor.'
+    \ex\label{agr-tr}
+    \gll Ben doktor \textbf{değil-im}.\\
+    1\gl{sg} doctor \gl{neg}-1\gl{sg}\\
+    \glt `I am not a doctor.'
+  \end{xlist}
+\end{exe}
+
+It therefore appears consistent with previous analyses, including within frameworks such as Universal Dependencies (UD), that this negative element is often analyzed as an auxiliary, i.e. a copula in these sentences (see, for instance, Turkish BOUN~\citelanguageresource{ud-turkish-boun} or Turkish TueCL~\citelanguageresource{ud-turkish-tuecl} UD Treebanks.)
+Such an analysis is illustrated in Figure~\ref{fig:existing-tree}.
+
+\begin{figure}[ht]
+  \centering
+  \begin{dependency}
+    \begin{deptext}[column sep=-0.1em]
+      Deniz \& odada \& değil \& di \& .\\
+      \footnotesize \upos{PROPN} \& \footnotesize \upos{NOUN} \& \footnotesize \upos{AUX}  \& \footnotesize \upos{AUX} \& \footnotesize \upos{PUNCT} \\
+      \footnotesize Deniz \& \footnotesize room.\gl{loc} \& \gl{neg} \& \footnotesize be;\gl{pst}[3\gl{sg}] \& . \\
+    \end{deptext}
+    \deproot{2}{root}
+    \depedge{2}{1}{nsubj}
+    \depedge{2}{3}{aux}
+    \depedge{2}{4}{cop}
+    \depedge{2}{5}{punct}
+  \end{dependency}
+  \caption{
+    An existing UD analysis of \emph{de\u{g}il} as \upos{AUX} with \rel{aux} relation.
+    The meaning of the sentence is: `Deniz was not in the room.'
+  }
+  \label{fig:existing-tree}
+\end{figure}
+
+However, we do not adopt this interpretation, as our observations reveal grammatical behaviors that are incompatible with either an auxiliary or a copular analysis, including agreement patterns and positional restrictions.
+
+\section{Grammatical behavior of the negative element}
+
+%The starting point of our argumentation is that the omission of the copula in the negative construction is not obligatory, but is constrained by grammatical conditions; for example, the copula must be realized in the past tense with the negative element, see (\ref{neg-pst}).\footnote{As the Azerbaijani example is parallel to the Turkish one, it is not illustrated separately here.}
+
+The starting point of our argumentation is that the omission of the copula in negative constructions is not obligatory but is constrained by general properties of non-verbal predication. In particular, in the present tense, non-verbal predicates do not require an overt copula, and the negative element appears without one accordingly. By contrast, in contexts where the non-negated counterpart requires an overt copula, the copula is also realized in the negative construction; for example, it must be expressed in the past tense with the negative element, as shown in (\ref{neg-pst}).\footnote{As the Azerbaijani example is parallel to the Turkish one, it is not illustrated separately here.}
+
+\begin{exe}
+  \ex\label{neg-pst}
+  \begin{xlist}
+    \ex\label{neg-pst-tr}
+    \gll Ben doktor \textbf{değil} *(\textbf{i-di-m}).\\
+    1\gl{sg} doctor \gl{neg} \gl{cop}-\gl{pst}-1\gl{sg}\\
+    \glt `I was not a doctor.'\footnote{The notation \emph{*(X)} indicates that the element in parentheses is obligatory; its omission renders the sentence ungrammatical.}
+    \ex\label{neg-pst-ky}
+    \glll \cyr{Мен} \cyr{доктур} \cyr{\textbf{эмес}} \cyr{*(\textbf{элем})}.\\
+    Men doktur \textbf{emes} *(\textbf{ele-m}).\\
+    1\gl{sg} doctor \gl{neg} \gl{cop};\gl{pst}-1\gl{sg}\\
+    \glt `I was not a doctor.'
+  \end{xlist}
+\end{exe}
+
+%further contexts, where copula omission is not possible
+%While the occurrence of two copular elements within a single predication domain is not entirely inconceivable, such cases strongly suggest that the negative element should not be treated as a copula in this construction.
+
+While the occurrence of two copular elements within a single predication domain is not entirely inconceivable, such cases render the behavior of the negative element more obvious and provide tentative evidence against analyzing it as a copula in this construction.
+
+A further argument against analyzing the negative element as a copular verb comes from agreement patterns.
+As illustrated in (\ref{agr}) and (\ref{neg-pst}), subject agreement appears on the negative element only in the absence of an overt copula. For convenience, we repeat the Turkish examples in (\ref{repeat}). In example (\ref{repeat-agr}), the negative element bears first person singular agreement in the absence of an overt copula. Example (\ref{repeat-cop}) illustrates the corresponding structure in which the negative element co-occurs with an overt copula, and the agreement suffix is realized on the copular verb rather than on the negative element. Together, these examples highlight the complementary distribution of agreement marking between the negative element and the overt copula in non-verbal predication contexts.
+
+\begin{exe}
+  \ex\label{repeat}
+  \begin{xlist}
+    \ex\label{repeat-agr}
+    \gll Ben doktor \textbf{değil-im}.\\
+    1\gl{sg} doctor \gl{neg}-1\gl{sg}\\
+    \glt `I am not a doctor.'
+    \ex\label{repeat-cop}
+    \gll Ben doktor \textbf{değil} \textbf{i-di-m}.\\
+    1\gl{sg} doctor \gl{neg} \gl{cop}-\gl{pst}-1\gl{sg}\\
+    \glt `I was not a doctor.'
+
+  \end{xlist}
+\end{exe}
+
+This distribution shows that agreement morphology is realized on the negative element in environments where the copula is absent. Importantly, this does not imply that the negative element functions as a copular verb. Rather, the data are consistent with the interpretation that the negative element is part of the predicate phrase, serving as the locus for the morphological expression of person and number features when no overt copula is present.
+
+Second, the subject agreement suffixes realized on the negative element are morphologically identical to those appear on nouns, adjectives, and adverbs when they function as predicates in the present tense, i.e. in the absence of an overt copula. By contrast, the verbal copula employs a distinct set of subject agreement morphemes. This contrast is clearly illustrated by the Kyrgyz data \citep[c.f.][]{kasieva-etal-2023}, which show that the agreement suffix attached to the negative element in (\ref{neg-ky-2}) patterns with the nominal/adverbial predicate agreement type in (\ref{non-neg-ky}), and differs from that realized on the copula in (\ref{cop-ky}), thereby making the distinction between the two paradigms explicit.
+
+
+
+\begin{exe}
+  \ex
+  \begin{xlist}
+    \ex\label{neg-ky-2}
+    \glll \cyr{Мен} \cyr{доктур} \cyr{\textbf{эмесмин}}.\\
+    Men doktur \textbf{emes-min}.\\
+    1\gl{sg} doctor \gl{neg}-1\gl{sg}\\
+    \glt `I am not a doctor.'
+    \ex\label{non-neg-ky}
+    \glll \cyr{Мен} \cyr{\textbf{доктурмун}} {/} \cyr{\textbf{парктамын}}.\\
+    Men doktur-\textbf{mun} {/} park-ta-\textbf{min}.\\
+    1\gl{sg} doctor-1\gl{sg} {/} park-\gl{loc}-1\gl{sg}\\
+    \glt `I am a doctor/at the park.'
+    \ex\label{cop-ky}
+    \glll \cyr{Мен} \cyr{паркта} \cyr{\textbf{элем}}.\\
+    Men \textbf{park-ta} \textbf{ele-m}.\\
+    1\gl{sg} park-\gl{loc} \gl{cop};\gl{pst}-1\gl{sg}\\
+    \glt `I was at the park.'
+  \end{xlist}
+\end{exe}
+
+%\begin{exe}
+%  \ex
+%  \begin{xlist}
+%    \ex\label{non-neg-tur}
+%    \gll Ben doktor-\textbf{um} {/} park-ta-y-\textbf{ım}.\\
+%    1\gl{sg} doctor-\gl{1sg} {/} park-\gl{loc}-1\gl{sg}\\
+%    \glt `I am a doctor / in the park.'
+%   \ex\label{neg-tur}
+%     \gll Ben doktor \textbf{değil-im}.\\
+%    1\gl{sg} doctor \gl{neg}-1\gl{sg}\\
+%    \glt `I am not a doctor.'
+%  \end{xlist}
+%\end{exe}
+
+The morphological similarity of the agreement markers on the negative element to those found on nominal, adjectival, and adverbial predicates in copula-less clauses further distinguishes it from the verbal copula, which uses a distinct set of agreement morphemes.\footnote{An alternative interpretation would be to analyze the negative element as instantiating the predicate head in copula-less clauses, given that it bears agreement morphology identical to that found on nominal predicates. While compatible with the morphological facts, pursuing this analysis would require a broader reconsideration of the structure of non-verbal predication in these languages.} This mismatch provides independent evidence against analyzing the negative element as a copular or auxiliary element.
+
+Overall, the data support viewing the negative element as a polarity-sensitive element operating within the predicate domain rather than as a verbal or copular head. Its verbal-like agreement morphology arises from its structural position: agreement surfaces on the negative element only when the copula is absent, without requiring a specific representation of a null copula.
+
+Finally, in Turkish and Azerbaijani, the negative element occupies a fixed position within the predicate phrase, intervening between the nominal predicate and the verbal copula.
+While its surface position is invariant, the interpretation of the negation may vary: it can be understood as targeting the entire predicate or a specific constituent within it, such as a modifier.
+For instance, in a sentence like ``I was not a good doctor'' in (\ref{scope-tr}), the negative element may be interpreted as negating the entire predicate (the individual was not a doctor at all) or only the modifier (the individual was a doctor, but not a good one).
+Since the position of the negative element does not vary, disambiguation relies on context or on explicit linguistic devices (e.g.\ \textit{Ben iyi bir doktor değil, iyi bir hemşireydim} `I was not a good doctor, but a good nurse').
+Its consistent adjacency to the copula and integration within the predicate phrase suggest that it is structurally part of the predicate and functions as a polarity-sensitive element, rather than as a freely mobile or independent auxiliary.
+
+\begin{exe}
+%  \ex\label{scope-ta}
+%  \begin{xlist}
+    \ex\label{scope-tr}
+    \gll Ben iyi bir doktor \textbf{değil} i-di-m.\\
+    1\gl{sg} good \gl{indef} doctor \gl{neg} \gl{cop}-\gl{pst}-1\gl{sg}\\
+    \glt `I was not a good doctor.'
+%    \ex\label{scope-az}
+%    \gll Mən yaxçı döktür \textbf{dəyil-di-m}, amma döktür iy-di-m.\\
+%    1\gl{sg} good doctor \gl{neg}-\gl{cop};\gl{pst}-1\gl{sg} but doctor \gl{cop}-\gl{pst}-1\gl{sg}\\
+%    \glt `I was not a good doctor, but I was a doctor.'
+%  \end{xlist}
+\end{exe}
+
+% Ben (emphasis) değil-dim iyi bir (one) doktor
+% I was not a good doctor.
+% -
+
+% A: Ben iyi bir doktor değildim. (I was not a good doctor. -default)
+% B: Hayır, [[foc BEN değildim [iyi bir doktor ...]] . (No, I wasn't a good doctor. -emphasis on me)
+% Hayır, BEN iyi bir doktor değildim. [This is also similar, with focus.]
+
+% İyi doktor ben değil-dim, sen-din.
+% good doctor I not-PST.1sg you-PST.2sg
+
+% Ben iyi (olan) doktor değil-dim, kötü olan-dım.
+
+%Despite the fact that in (\ref{scope-tr}) and (\ref{scope-az}), semantically, the negative element may appear to target an internal modifier of the predicate phrase, its fixed position, i.e.\ intervening between the nominal part of the predicate and the copula, indicates that it is structurally integrated within the predicate rather than freely mobile.
+%Its adjacency to the copula further suggests a close functional relationship with the copula, consistent with an operator-like role that is constrained by the internal syntax of the clause.
+
+In contrast, in Kyrgyz the position of the negative element within the predicate phrase is less clearly fixed. It appears to be structurally flexible in that it can follow different constituents within the predicate phrase, possibly depending on which part is being negated. At the same time, there is a tendency for it to occur immediately after the constituent in its scope. This pattern suggests that the negative element can take scope over internal modifiers of non-verbal predicates: in (\ref{scope-ky-adj}), it follows the adjective and is interpreted as negating it, whereas in (\ref{scope-ky-np}), it follows the entire nominal predicate and is interpreted as negating the predicate as a whole.
+
+\begin{exe}
+  \ex
+  \begin{xlist}
+    \ex\label{scope-ky-adj}
+    \glll \cyr{Мен} \cyr{жакшы} \cyr{\textbf{эмес}} \cyr{доктур} \cyr{элем}.\\
+    Men jakşı \textbf{emes} doktur ele-m.\\
+    1\gl{sg} good \gl{neg} doctor \gl{cop};\gl{pst}-1\gl{sg}\\
+    \glt `I was not a good doctor.' (I was a doctor, but not a good one.)\footnote{While (\ref{scope-ky-adj}) is grammatically acceptable, the adjective-negating interpretation may be reinforced by prosodic stress on the adjective or by the addition of the focus particle \emph{\cyr{деле}} `even, indeed'.}
+    \ex\label{scope-ky-np}
+    \glll \cyr{Мен} \cyr{жакшы} \cyr{доктур} \cyr{\textbf{эмес}} \cyr{элем}.\\
+    Men jakşı doktur \textbf{emes} ele-m.\\
+    1\gl{sg} good doctor \gl{neg} \gl{cop};\gl{pst}-1\gl{sg}\\
+    \glt `I was not a good doctor.' (I was not a doctor at all.)
+  \end{xlist}
+\end{exe}
+
+In sum, in Azerbaijani, Kyrgyz, and Turkish, the negative element does not behave as a copula or an auxiliary. In contexts where the non-verbal predicate in the non-negated clause does not require an overt copula, no copula appears in the negative construction. Agreement morphology surfaces on the negative element only in the absence of the copula, and the forms of these markers are identical to those found on nominal, adjectival, and adverbial predicates. The negative element occupies a fixed position within the predicate phrase, consistently following the non-verbal predicate. Together, these patterns indicate that, across all three languages, the negative element is structurally integrated within the predicate domain and functions as the locus for agreement realization.
+
+\section{Proposed analysis}
+
+Building on the grammatical and positional patterns outlined above, we now turn to the analysis of the negative element.
+Across the constructions illustrated in Azerbaijani, Kyrgyz, and Turkish, the negative element behaves as an operator: it takes scope over the constituent it negates and requires adjacency to establish a clear scope relationship.
+Its position immediately preceding the copula, together with the fact that agreement features appear on the negative element only when the copula is absent, further distinguishes it from a true copula or an auxiliary.
+Taken together, these observations motivate a descriptive analysis in which the negative element is treated as a phrasal operator associated with non-verbal predicates rather than as a copula or an auxiliary.
+
+Within the framework of Universal Dependencies, this interpretation can be captured by assigning the negative element the part-of-speech tag \upos{ADV} and the dependency relation \rel{advmod:neg}.\footnote{Note that analyzing the negative element as an adverb (\upos{ADV}) is not contradicted by the presence of agreement markers on it: in Turkic languages, adverbs can take agreement morphology when functioning as predicates~\citep{kornfilt2013}, and this agreement is associated with the predicate as a whole rather than the adverb itself.}
+This analysis accommodates its operator-like behavior, adjacency requirements, and interaction with covert copulas, providing a linguistically informed and typologically consistent annotation strategy for Turkic treebanks.
+A closely related analysis is already attested in the UD Turkish--German SAGT treebank~\citep{cetinoglu_two_2023}, where \emph{değil} is consistently annotated with the relation \rel{advmod} and the POS tag \upos{PART}~\citelanguageresource{ud-turkish-german-sagt}.
+Our proposal differs only in the choice of POS tag (\upos{ADV} rather than \upos{PART}) and in the use of the subtype \rel{advmod:neg} to explicitly mark the negation function.
+By distinguishing this element from the copula, our approach ensures that UD treebanks can more accurately reflect the syntactic and semantic properties of negation in non-verbal clauses across Turkic languages.
+The proposed analysis is illustrated in Figure~\ref{fig:proposed-trees}, showing UD analyses of the Turkish examples in (\ref{neg-tr}) and (\ref{agr-tr}), respectively.
+Additionally, the Kyrgyz examples in (\ref{scope-ky-adj}) and (\ref{scope-ky-np}) are illustrated in Figure~\ref{fig:kyr-tree}.
+
+\begin{figure}[ht]
+  \centering
+  \begin{dependency}
+    \begin{deptext}[column sep=1.6em]
+      Deniz \& doktor \& değil \& .\\
+      \footnotesize \upos{PROPN} \& \footnotesize \upos{NOUN} \& \footnotesize \upos{ADV} \& \footnotesize \upos{PUNCT} \\
+      \footnotesize Deniz \& \footnotesize doctor \& \gl{neg} \& . \\
+    \end{deptext}
+    \deproot{2}{root}
+    \depedge{2}{1}{nsubj}
+    \depedge{2}{3}{advmod:neg}
+    \depedge{2}{4}{punct}
+  \end{dependency}
+  \vspace{1em}
+  \begin{dependency}
+    \begin{deptext}[column sep=1.6em]
+      Ben \& doktor \& değil \& idim \& .\\
+      \footnotesize \upos{PRON} \& \footnotesize \upos{NOUN} \& \footnotesize \upos{ADV} \& \footnotesize \upos{AUX} \& \footnotesize \upos{PUNCT} \\
+      \footnotesize I \& \footnotesize doctor \& \gl{neg} \& \gl{cop} \& . \\
+    \end{deptext}
+    \deproot{2}{root}
+    \depedge{2}{1}{nsubj}
+    \depedge{2}{3}{advmod:neg}
+    \depedge{2}{4}{cop}
+    \depedge{2}{5}{punct}
+  \end{dependency}
+  \caption{Proposed UD analyses of the Turkish examples in (\ref{neg-tr}) and (\ref{agr-tr}), respectively, with \emph{de\u{g}il} analyzed as \upos{ADV} and \rel{advmod:neg}.}
+  \label{fig:proposed-trees}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \begin{dependency}
+    \begin{deptext}[column sep=0.2em]
+      Men \& jakşı \& emes \& doktur  \& elem \& . \\
+      \footnotesize \upos{PRON} \& \footnotesize \upos{ADJ} \& \footnotesize \upos{ADV} \& \footnotesize \upos{NOUN} \& \footnotesize \upos{AUX} \& \upos{PUNCT} \\
+      \footnotesize I \& \footnotesize good \& \footnotesize \gl{neg} \& \footnotesize doctor \& \footnotesize \gl{cop} \& . \\
+    \end{deptext}
+
+    \deproot{4}{root}
+    \depedge{4}{1}{nsubj}
+    \depedge{4}{2}{amod}
+    \depedge{2}{3}{advmod:neg}
+    \depedge{4}{5}{cop}
+    \depedge{4}{6}{punct}
+
+  \end{dependency}
+  \vspace{1em}
+  \begin{dependency}
+    \begin{deptext}[column sep=0.2em]
+      Men \& jakşı \& doktur \& emes  \& elem \& . \\
+      \footnotesize \upos{PRON} \& \footnotesize \upos{ADJ} \& \footnotesize \upos{NOUN} \& \footnotesize \upos{ADV} \& \footnotesize \upos{AUX} \& \upos{PUNCT} \\
+      \footnotesize I \& \footnotesize good \& \footnotesize doctor \& \footnotesize \gl{neg} \& \footnotesize \gl{cop} \& . \\
+    \end{deptext}
+
+    \deproot{3}{root}
+    \depedge{3}{1}{nsubj}
+    \depedge{3}{2}{amod}
+    \depedge{3}{4}{advmod:neg}
+    \depedge{3}{5}{cop}
+    \depedge{3}{6}{punct}
+
+  \end{dependency}
+  \caption{Proposed UD analyses of the Kyrgyz examples in (\ref{scope-ky-adj}) and (\ref{scope-ky-np}), respectively, with \emph{emes} analyzed as \upos{ADV} and \rel{advmod:neg}.
+  In the first tree, \emph{emes} attaches to the adjective; in the second, to the nominal predicate.}
+  \label{fig:kyr-tree}
+\end{figure}
+
+When the negative element bears copular suffixes, as in Turkish \emph{değildim} (değil + i-di-m), the bound copula and agreement morphology should be segmented into a separate token following the tokenization guidelines for Turkic copula constructions proposed by~\citet{coltekinTokenisationTurkicCopula2026}.
+
+\section{Conclusions}
+
+This study has examined the behavior of the negative element in non-verbal predicates across Azerbaijani, Kyrgyz, and Turkish, focusing on its syntactic position, interaction with the copula, and agreement patterns.
+In Turkish and Azerbaijani, the negative element occupies a fixed position, intervening between the nominal part of the predicate and the copula, whereas in Kyrgyz it shows greater positional flexibility, consistently appearing immediately after the constituent it negates.
+Across all three languages, agreement appears on the negative element only when the copula is absent, highlighting the distinction between the element itself and the copula.
+
+These patterns consequently support an analysis in which the negative element is treated as a phrasal operator associated with non-verbal predicates rather than as a copula or auxiliary.
+Its fixed or constrained positioning, adjacency requirements, and interaction with agreement provide clear evidence of its structural integration and functional role within the clause.
+
+\section*{Acknowledgements}
+
+We thank the Turkic UD working group for fruitful discussions of linguistic issues and annotation approaches.
+This work was supported by COST Action CA21167 -- Universality, diversity and idiosyncrasy in language technology (UniDive).
+
+\section*{Bibliographical References}
+
+\bibliographystyle{lrec2026-natbib}
+\bibliography{references}
+
+\section*{Language Resource References}
+\label{lr:ref}
+\bibliographystylelanguageresource{lrec2026-natbib}
+\bibliographylanguageresource{languageresource}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
