@@ -3,7 +3,7 @@
 \usepackage[margin=1in]{geometry}
 
 % Use [review] for anonymous submission; remove for final version
-\usepackage[review]{acl}
+\usepackage[final]{acl}
 
 \usepackage{times}
 \usepackage{latexsym}
@@ -16,11 +16,33 @@
 }
 
 \title{From variation to harmonization: the UD Turkic Group initiative}
+
+
 % Authors omitted for double-blind review
-\author{}
+\author{
+\textbf{Soudabeh Eslami\textsuperscript{1}},
+\textbf{Furkan Akkurt\textsuperscript{2}},
+\textbf{Bermet Chontaeva\textsuperscript{1}},
+\textbf{{\c{C}}a{\u{g}}r{\i} {\c{C}}{\"o}ltekin\textsuperscript{1}},\\
+\textbf{Nikolett Mus\textsuperscript{3}},
+\textbf{Jonathan Washington\textsuperscript{4}},
+\\
+\textsuperscript{1}University of Tübingen,
+ \textsuperscript{2}Bo\u{g}aziçi University
+ \textsuperscript{3}ELTE Research Centre for Linguistics,\\
+  \textsuperscript{4}Swarthmore College
+\\
+\{soudabeh.eslami, bermet.chontaeva\}@student.uni-tuebingen.de\\
+furkan.akkurt@bogazici.edu.tr\\
+cagri.coeltekin@uni-tuebingen.de\\
+mus.nikolett@nytud.elte.hu\\
+jonathan.washington@swarthmore.edu\\
+}
+
 
 \begin{document}
 \maketitle
+
 
 \wgs{WG1 (Corpus annotation), WG4 (Quantifying and promoting diversity)}
 
@@ -40,13 +62,13 @@ The Turkic language family spans a vast area from southeastern Europe to northea
 
 Coverage is highly uneven. Turkish alone accounts for 11 treebanks totaling over 700,000 tokens across diverse genres including news, web text, grammar examples, dictionary entries, tourism reviews, and spoken data. Most other languages are represented by only one or two treebanks, often with fewer than 10,000 tokens, and several consist of only a few hundred sentences. The larger treebanks tend to be well-established and regularly updated, while many of the smaller ones represent initial annotation efforts.
 
-Known divergences include differences in copula tokenization and lemmatization --- where even the major Turkish treebanks follow mutually inconsistent practices --- the morphological analysis of auxiliaries, the treatment of pronominal locative constructions, and varying morphological feature inventories across teams and languages.
+Known divergences include differences in copula tokenization and lemmatization -- where even the major Turkish treebanks follow mutually inconsistent practices -- the morphological analysis of auxiliaries, the treatment of pronominal locative constructions, and varying morphological feature inventories across teams and languages.
 
 \section{Methodology}
 Since its formation, the UD Turkic Group has coordinated its efforts through regular online meetings, during which subgroups were established to address specific tasks. These subgroups focused on mapping annotation inconsistencies, surveying relevant linguistic literature, and formulating linguistically oriented research questions to guide harmonization. The process was structured around two in-person workshops. The inaugural UD Turkic Workshop (Istanbul, September 2023), co-located with the UniDive 2nd WG3 meeting, convened treebank developers and Turkic linguists to review existing treebanks, identify inconsistencies, and set a shared research agenda. The UD Turkic Workshop (Ljubljana, August 2025), held alongside SyntaxFest 2025, provided a forum for presenting ongoing annotation work and parallel treebank projects, facilitating discussion of emerging challenges and consolidation of optimal practices. Together, the online and in-person activities formed a systematic methodology, enabling cross-linguistic comparison, alignment of UD annotations, and the development of collaborative standards for Turkic treebanks.
 
 \section{Research topics and publications}
-The group has concentrated on a number of recurrent annotation problems underlying cross-treebank inconsistencies in Turkic UD, focusing on cases where shared structural features receive divergent analyses. This work has led to a series of conference presentations and ongoing publications.
+The group has concentrated on a number of recurrent annotation problems underlying cross-treebank inconsistencies in Turkic UD, focusing on cases where shared structural features receive divergent analyses. Phenomena occurring at the interface of morphology and syntax appear to pose particular annotation challenges. This work has led to a series of conference presentations and ongoing publications.
 
 One such issue concerns pronominalized locatives, i.e. constructions in which case-marked pronouns function as locative expressions. A cross-treebank survey revealed divergent annotation strategies, which were systematically reviewed by \citet{washingtonStrategiesAnnotationPronominalised2024} (MWE-UD 2024, LREC-COLING, Turin), leading to the proposal of a more consistent treatment.
 
