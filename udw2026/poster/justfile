@@ -1,0 +1,8 @@
+all:
+	typst compile --font-path fonts main.typ main.pdf
+
+main-pdf:
+	typst compile --font-path fonts main.typ main.pdf
+
+clean:
+	rm -f main.pdf
