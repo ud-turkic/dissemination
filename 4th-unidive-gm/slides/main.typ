@@ -1,6 +1,7 @@
 #import "@preview/touying:0.6.1": *
 #import themes.university: *
 #import "@preview/unidep:0.1.4": dependency-tree
+#import "@preview/tiaoma:0.3.0": qrcode
 
 // ============================================================
 // UD Turkic Group — 4th UniDive General Meeting
@@ -37,7 +38,7 @@
   config-common(enable-pdfpc: false),
 )
 
-#set text(font: "Fira Sans", size: 18pt)
+#set text(font: "Fira Sans", size: 19pt)
 #show link: it => text(fill: ud_blue, it)
 
 // ---------- helpers ----------
@@ -63,15 +64,18 @@
 
 // unidep renders at a fixed base scale, so shrink to slide size with
 // scale(reflow: true) rather than by setting the font size.
-#let tree(src, zoom: 68%) = align(center)[
+// Geometry is deliberately tight: the arcs are scaffolding, the words and
+// relation labels are the content, so keep the text large relative to the
+// space the tree occupies.
+#let tree(src, zoom: 72%) = align(center)[
   #scale(x: zoom, y: zoom, reflow: true)[
-    #set text(size: 15pt)
+    #set text(size: 17pt)
     #dependency-tree(
       src,
       show-text: true,
       show-upos: true,
-      word-spacing: 5.0,
-      level-height: 2.1,
+      word-spacing: 4.0,
+      level-height: 1.5,
       arc-roundness: 0.26,
       tail-spacing: 0.4,
       head-spacing: 0.16,
@@ -110,15 +114,19 @@
 
 == Who we are
 
+// densest slide in the deck: hold it just under the 19pt global size so the
+// funder/aims block and the v2.18 counts stay on one page
+#set text(size: 0.94em)
+
 #grid(columns: (1.35fr, 1fr), gutter: 26pt)[
   Established *September 2023* within the UniDive COST Action (CA21167),
-  operating primarily within *WG1*.
+  under *WG1*, Task 1.3.2 — harmonisation of UD annotations for Turkic
+  languages.
 
   #v(0.5em)
   *Two aims*
   #v(0.2em)
-  + Harmonize annotations across Universal Dependencies treebanks for
-    Turkic languages.
+  + Harmonize annotations across existing Turkic UD treebanks.
   + Develop guidelines for future annotation initiatives.
 
   #v(0.6em)
@@ -126,13 +134,16 @@
   #tag(fill: ud_gold)[WG4 Quantifying and promoting diversity]
 ][
   #block(fill: ud_blue.lighten(94%), radius: 6pt, inset: 13pt, width: 100%)[
-    #text(weight: "bold", fill: ud_blue)[Turkic in UD v2.17]
+    #text(weight: "bold", fill: ud_blue)[Turkic in UD v2.18]
     #v(0.35em)
     #set text(size: 0.9em)
     #grid(columns: (auto, 1fr), row-gutter: 0.45em, column-gutter: 8pt,
-      text(size: 1.5em, weight: "bold", fill: ud_blue)[25], [treebanks],
-      text(size: 1.5em, weight: "bold", fill: ud_blue)[12], [languages\ and varieties],
+      text(size: 1.5em, weight: "bold", fill: ud_blue)[26], [treebanks],
+      text(size: 1.5em, weight: "bold", fill: ud_blue)[10], [languages\ and varieties],
+      text(size: 1.5em, weight: "bold", fill: ud_blue)[2], [code-switching\ corpora],
     )
+    #v(0.35em)
+    #cite_note[out of some *40* Turkic languages]
   ]
 ]
 
@@ -155,17 +166,17 @@
   table.header([*Branch*], [*Languages in UD*], [*Note*]),
   [Oghuz], [Turkish, Ottoman Turkish, Azerbaijani], [best resourced],
   [Karluk], [Uzbek, Uyghur], [small],
-  [Kipchak], [Kazakh, Kyrgyz, Tatar], [small],
-  [Siberian], [Sakha], [minimal],
-  [—], [Old Turkish], [historical],
-  [—], [two code-switching corpora], [mixed],
+  [Kypchak], [Kazakh, Kyrgyz, Tatar], [small],
+  [Lena Turkic], [Sakha], [small],
+  [—], [Old Turkic], [historical],
+  [—], [Turkish–German (SAGT), Turkish–English (BUTR)], [code-switching],
 )
 
 #v(0.4em)
 
 #grid(columns: (1fr, 1fr), gutter: 20pt)[
   #block(fill: ud_green.lighten(92%), radius: 5pt, inset: 11pt, width: 100%)[
-    *Turkish alone* — 10 treebanks, over 730,000 tokens.
+    *Turkish alone* — 10 treebanks, roughly 730,000 tokens.
     News, web text, grammar examples, dictionary entries, tourism reviews,
     spoken data.
   ]
@@ -179,17 +190,23 @@
 == Where the variation comes from
 
 #grid(columns: (1fr, 1fr), gutter: 24pt)[
-  *Two sources*
+  *Three sources*
 
   #v(0.3em)
   - Unresolved questions in *linguistic analysis*.
   - Independent *design choices* across annotation efforts.
+  - Differing degrees of *grammaticalization* of the same structure across
+    the family.
 
-  #v(0.5em)
-  Both are amplified by differing linguistic traditions and by gaps in
+  #v(0.45em)
+  All three are amplified by differing linguistic traditions and by gaps in
   language-specific description.
+
+  #v(0.45em)
+  And the inconsistency is not only *between* treebanks — many are
+  inconsistent *internally* as well.
 ][
-  *Known divergences*
+  *Divergences we have worked on*
 
   #v(0.3em)
   - Copula tokenization and lemmatization\
@@ -197,6 +214,10 @@
   - Morphological analysis of auxiliaries
   - Treatment of pronominal locative constructions
   - Varying morphological feature inventories
+
+  #v(0.4em)
+  #cite_note[Many further divergences are known; these are the ones the group
+  has spent substantial time on.]
 ]
 
 #v(0.7em)
@@ -219,6 +240,7 @@
   - mapping annotation inconsistencies
   - surveying relevant linguistic literature
   - formulating research questions to guide harmonization
+  - building consensus across a group with diverse linguistic traditions
 ][
   *Two in-person workshops*
 
@@ -250,7 +272,7 @@
   fill: (_, y) => if y == 0 { ud_blue.lighten(88%) } else if calc.odd(y) { rgb("#FAFAFC") },
   table.header([*Topic*], [*Proposal*], [*Venue*]),
   [Pronominalized\ locatives],
-  [Segment pronominal _-ki_ as a multi-word token; nominal POS on _-ki_],
+  [Segment pronominal _-ki_ as a subword token; nominal POS on _-ki_],
   [MWE-UD 2024\ #cite_note[May, LREC-COLING, Turin]],
 
   [Parallel\ treebanks],
@@ -266,17 +288,24 @@
   [UDW 2026\ #cite_note[May, Palma de Mallorca]],
 )
 
+#v(0.4em)
+#cite_note[Not an exhaustive map of the problem space — these are the four
+strands the group has pursued in depth.]
+
 == Worked example: non-verbal negation
 
-Turkish, Azerbaijani and Kyrgyz all show that the negative element in
-non-verbal clauses *cannot* be consistently analysed as an auxiliary or copula.
+// the trees are the point of this slide, so keep the prose around them small
+#set text(size: 0.94em)
 
-#v(0.4em)
+Across Turkish, Azerbaijani and Kyrgyz, the negative element in non-verbal
+clauses *cannot* consistently be analysed as an auxiliary or copula.
+
+#v(0.35em)
 
 #grid(columns: (1fr, 1fr), gutter: 18pt)[
   #align(center)[#text(weight: "bold", fill: ud_blue, size: 0.9em)[No overt copula]]
   #v(0.2em)
-  #tree(``` // seems small still
+  #tree(```
 # text = Deniz doktor değil.
 1	Deniz	Deniz	PROPN	_	_	2	nsubj	_	_
 2	doktor	doktor	NOUN	_	_	0	root	_	_
@@ -300,9 +329,12 @@ non-verbal clauses *cannot* be consistently analysed as an auxiliary or copula.
 
 #v(0.3em)
 #takeaway[
-  Treating _değil_ as `ADV` + `advmod:neg` separates the negator from the
-  copula, keeps Oghuz and Kipchak comparable, and preserves Kyrgyz scope
-  contrasts.
+  Treating _değil_ as `ADV` + `advmod:neg`
+  #v(0.2em)
+  #set text(size: 0.95em)
+  - separates the negator from the copula,
+  - keeps Oghuz and Kypchak comparable,
+  - preserves Kyrgyz scope contrasts.
 ]
 
 == Parallel Universal Dependencies treebanks
@@ -314,22 +346,27 @@ non-verbal clauses *cannot* be consistently analysed as an auxiliary or copula.
   #v(0.6em)
   #text(weight: "bold", fill: ud_green)[Published]
   #v(0.15em)
-  Azerbaijani · Kyrgyz · Turkish · Uzbek
+  Azerbaijani · Kyrgyz · Ottoman Turkish · Turkish · Uzbek
 
   #v(0.5em)
   #text(weight: "bold", fill: ud_gold)[In progress]
   #v(0.15em)
-  Crimean Tatar · Karakalpak · Kumyk · Sakha · Tatar
+  Crimean Tatar · Karachay–Balkar · Karakalpak · Kumyk · Sakha · Tatar
 
   #v(0.5em)
   #text(weight: "bold", fill: grey)[Planned]
   #v(0.15em)
-  Kazakh · Uyghur
+  Kazakh · Turkmen · Uyghur
 ][
   #block(fill: ud_blue.lighten(94%), radius: 6pt, inset: 14pt, width: 100%)[
     #set text(size: 0.9em)
     Aligned at the *sentence level*, so the same content can be compared
-    construction by construction across the family.
+    across the family — including where the languages reach for *different
+    constructions* to express it.
+
+    #v(0.5em)
+    Those mismatches have proved as informative as the parallels: for all the
+    family resemblance, the differences are not rare.
 
     #v(0.5em)
     This is the group's main *resource* contribution, as opposed to its
@@ -404,7 +441,7 @@ actually measures the group's reach.
   [#text(fill: ud_red, weight: "bold")[No]],
 
   [Non-verbal\ negation],
-  [`advmod:neg` has *zero occurrences* across all 25 Turkic treebanks. All
+  [`advmod:neg` has *zero occurrences* across all 26 Turkic treebanks. All
    independently maintained treebanks analyse the negator as `AUX` with `aux`
    or `cop`.],
   [#text(fill: ud_red, weight: "bold")[No]],
@@ -438,9 +475,13 @@ actually measures the group's reach.
   UD release cycle, has to become part of the method.
 ]
 
-#v(0.5em)
+#v(0.45em)
 
-A lesson that generalizes past Turkic and UniDive.
+#set text(size: 0.93em)
+Expect *principled resistance* to some of the proposals, though — and uptake is
+not the only measure. Alternative analyses appearing in print, or maintainers
+joining the group rather than publishing against it, would each count as the
+conversation working. A lesson that generalizes past Turkic and UniDive.
 
 // ============================================================
 = Prospects
@@ -451,16 +492,20 @@ A lesson that generalizes past Turkic and UniDive.
   *Resources*
 
   #v(0.25em)
-  - Extend the parallel treebanks: five languages in progress, Kazakh and
-    Uyghur planned.
+  - Extend the parallel treebanks:
+    - six languages in progress
+    - Kazakh, Turkmen and Uyghur planned
 
   #v(0.7em)
   *New annotation challenges*
 
   #v(0.25em)
-  - Converb constructions
+  - Quotative constructions
   - Multi-word expressions
-  - Postpositional phrases
+  // NOTE(jonathan, 25 Aug): converbs and postpositional phrases were dropped —
+  // he does not consider them genuine open problems. He suggests pulling two
+  // more from the TurkLang Kyrgyz paper and from Bermet's recent non-MWE work;
+  // neither of us can name those, so Bermet should fill them in here.
 ][
   *Adoption: the priority*
 
@@ -473,8 +518,9 @@ A lesson that generalizes past Turkic and UniDive.
   #v(0.7em)
   #block(fill: ud_gold.lighten(90%), radius: 5pt, inset: 11pt, width: 100%)[
     #set text(size: 0.88em)
-    The group's structure outlives the Action: the meetings, subgroups and
-    shared agenda do not depend on UniDive funding to continue.
+    The group's structure outlives the Action: the *regular online meetings*,
+    the subgroups and the shared agenda do not depend on UniDive funding to
+    continue.
   ]
 ]
 
@@ -483,7 +529,7 @@ A lesson that generalizes past Turkic and UniDive.
 #v(0.4em)
 
 + The UD Turkic Group has worked since *2023* to harmonize annotation across
-  *25 treebanks* and *12 Turkic languages*.
+  *26 treebanks*, covering *10 Turkic languages* and two code-switching corpora.
 
   #v(0.4em)
 + Four strands of output: pronominalized locatives, copula tokenization,
@@ -492,7 +538,7 @@ A lesson that generalizes past Turkic and UniDive.
 
   #v(0.4em)
 + Measuring our own impact showed *no uptake* in independently maintained
-  treebanks — `advmod:neg` appears zero times across all 25.
+  treebanks — `advmod:neg` appears zero times across all 26.
 
   #v(0.4em)
 + The next phase is *adoption work*: maintainers and the release cycle, not
@@ -500,8 +546,23 @@ A lesson that generalizes past Turkic and UniDive.
 
 #v(0.6em)
 #align(center)[
-  #text(fill: ud_blue, weight: "bold", size: 1.05em)[Thank you, and questions?]
+  #text(fill: ud_blue, weight: "bold", size: 1.50em)[Thank you, and questions?]
+
+  #v(0.6em)
+
+  #text(fill: ud_blue, weight: "bold", size: 1.50em)[
+    #link("mailto:ud-turkic-group@googlegroups.com")[ud-turkic-group\@googlegroups.com]
+  ]
+
+  #v(0.8em)
+
+  #scale(260%, reflow: true)[#qrcode("https://github.com/ud-turkic")]
+
+  #v(0.4em)
+
+  #text(fill: ud_blue, weight: "bold")[UD Turkic Group]
 ]
+
 
 == Acknowledgements <touying:hidden>
 
@@ -543,3 +604,57 @@ A lesson that generalizes past Turkic and UniDive.
 
 - Akkurt, F. et al. (2024). Unifying the Annotations in Turkic Universal
   Dependencies Treebanks. _2nd UniDive General Meeting_.
+
+== Turkic UD Treebanks <sec:turkic-treebanks>
+
+All Turkic treebanks in Universal Dependencies v2.18, with basic size,
+genre, and domain statistics (@tab:treebank-stats).
+
+#figure(
+  scale(x: 90%, y: 90%, reflow: true)[
+    #text(size: 8.5pt)[
+      #table(
+        columns: 5,
+        align: (left, right, right, left, left),
+        stroke: none,
+        inset: (x: 6pt, y: 1.6pt),
+        table.hline(stroke: 1pt),
+        table.header(
+          [*Treebank*], [*Sentences*], [*Words*], [*Genre*], [*Additional Information*],
+        ),
+        table.hline(stroke: 0.5pt),
+        [Azerbaijani-TueCL], [148], [912], [grammar], [Parallel; grammar examples],
+        [Kazakh-KTB], [1078], [10536], [news, fiction, wiki], [Mixed sources],
+        [Kyrgyz-KTMU], [2530], [24128], [news, fiction], [Media texts],
+        [Kyrgyz-TueCL], [173], [1250], [grammar], [Parallel; grammar examples],
+        [Tatar-NMCTT], [148], [2280], [news, non-fiction], [Mixed sources],
+        [Turkish-Atis], [5284], [44296], [news, non-fiction], [ATIS domain],
+        [Turkish-BOUN], [9761], [125212], [news, non-fiction], [Web sources],
+        [Turkish-FrameNet], [2698], [19223], [grammar], [FrameNet annotations],
+        [Turkish-GB], [2880], [17177], [grammar], [Grammar examples],
+        [Turkish-IMST], [5635], [58096], [news, non-fiction], [METU-Sabancı corpus],
+        [Turkish-Kenet], [18687], [178658], [grammar], [Corpus of example sentences],
+        [Turkish-Penn], [16395], [183612], [news, non-fiction], [Turkish Penn Treebank],
+        [Turkish-PUD], [1000], [16881], [news, wiki], [Parallel corpus],
+        [Turkish-Tourism], [19830], [91152], [reviews], [Hotel reviews],
+        [Turkish-TueCL], [148], [904], [grammar], [Parallel source; Cairo, UDTW23],
+        [Turkish-German-SAGT], [2184], [37227], [spoken], [Code-switching corpus],
+        [Turkish-English-BUTR], [58], [441], [spoken], [Code-switching corpus],
+        [Old Turkish-Clausal], [20], [158], [non-fiction], [Old Turkic script (Orkhon)],
+        [Ottoman Turkish-BOUN], [514], [8851], [fiction, non-fiction], [Historical texts],
+        [Ottoman Turkish-DUDU], [2246], [22027], [mixed genres], [Bible, fiction, non-fiction, government, news],
+        [Ottoman Turkish-TueCL], [148], [929], [grammar], [Parallel; grammar examples],
+        [Uyghur-UDT], [3456], [40236], [fiction], [Literary texts],
+        [Uzbek-UzUDT], [684], [7582], [news, fiction], [Mixed sources],
+        [Uzbek-TueCL], [148], [939], [grammar], [Parallel; Cairo, UDTW23],
+        [Uzbek-UT], [500], [5930], [news, fiction], [Mixed sources],
+        [Yakut-YKTDT], [299], [1460], [news, non-fiction], [Media texts],
+        table.hline(stroke: 1pt),
+      )
+    ]
+  ],
+  caption: [Basic statistics on all Turkic UD treebanks available in version
+    2.18. Counts are syntactic *words*, not surface tokens; the two differ
+    wherever multi-word tokens are used.],
+) <tab:treebank-stats>
+
